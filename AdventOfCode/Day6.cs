@@ -30,26 +30,28 @@ public class Day6
     {
         var input = ReadAndParseInput();
         int count = 0;
-        HashSet<(int row, int column)> locations = new HashSet<(int row, int column)>();
+        HashSet<(int row, int column)> blockages = new HashSet<(int row, int column)>();
+        HashSet<(int row, int column)> visited = new HashSet<(int row, int column)>();
         bool isFree = false;
         do
         {
-            if (CheckIfNextObstacleCouldCauseLoop(input.grid, input.row, input.col))
+            visited.Add((input.row, input.col));
+            var nextStep = GetCharacterLocationInFront(input.grid, input.row, input.col);
+
+            if (!visited.Contains((nextStep.row, nextStep.col)) && CheckIfNextObstacleCouldCauseLoop(input.grid, input.row, input.col))
             {
-                var a = GetCharacterLocationInFront(input.grid, input.row, input.col);
-                locations.Add((a.row, a.col));
+                blockages.Add((nextStep.row, nextStep.col));
             }
+
             (input.row, input.col, isFree) = StepToNewLocation(input.grid, input.row, input.col, false);
         } while (!isFree);
 
-        Console.WriteLine(locations.Count);
+        Console.WriteLine(blockages.Count);
     }
 
     private bool CheckIfNextObstacleCouldCauseLoop(char[,] grid, int row, int col)
     {
         if (InFrontIsOutside(grid, row, col)) return false;
-
-
 
         //SETUP SIMULATION
         var sim = (char[,])grid.Clone();
