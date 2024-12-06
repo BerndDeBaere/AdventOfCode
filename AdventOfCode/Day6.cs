@@ -30,18 +30,19 @@ public class Day6
     {
         var input = ReadAndParseInput();
         int count = 0;
+        HashSet<(int row, int column)> locations = new HashSet<(int row, int column)>();
         bool isFree = false;
         do
         {
-            (input.row, input.col, isFree) = StepToNewLocation(input.grid, input.row, input.col, false);
-
             if (CheckIfNextObstacleCouldCauseLoop(input.grid, input.row, input.col))
             {
-                count++;
+                var a = GetCharacterLocationInFront(input.grid, input.row, input.col);
+                locations.Add((a.row, a.col));
             }
+            (input.row, input.col, isFree) = StepToNewLocation(input.grid, input.row, input.col, false);
         } while (!isFree);
 
-        Console.WriteLine(count);
+        Console.WriteLine(locations.Count);
     }
 
     private bool CheckIfNextObstacleCouldCauseLoop(char[,] grid, int row, int col)
