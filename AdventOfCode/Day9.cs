@@ -2,16 +2,12 @@
 
 public class Day9
 {
-    /// Tried the following input
-    /// 1851882345 (To Low)
-    /// 
     public void Part1()
     {
         var files = ReadAndParseInput().ToList();
         // Print(files);
 
-        Console.WriteLine(files.Count(f => f.Lenght == 0));
-        
+
         int lastFileIndexOfCompressed = GetLastFileIndexOfCompressed(files);
         while (lastFileIndexOfCompressed != -1)
         {
@@ -34,32 +30,73 @@ public class Day9
 
             lastFileIndexOfCompressed = GetLastFileIndexOfCompressed(files);
         }
-        
-        Print(files);
 
-        validateOverwrites(files);
-        
-        
-        int checksum = 0;
-        int lastIndex = files.Last().EndIndex;
-        for (int i = 0; i <= lastIndex; i++)
+        // Print(files);
+
+        long checksum = 0;
+        foreach (var file in files)
         {
-            var file = files.First(f => i >= f.StartIndex && i <= f.EndIndex);
-            checksum += file.Id * i;
+            for (int i = file.StartIndex; i <= file.EndIndex; i++)
+            {
+                checksum += file.Id * i;
+            }
         }
-
         Console.WriteLine(checksum);
     }
 
-    private void validateOverwrites(List<DiskFile> files)
+
+    /// 7311068665635 (To High)
+    /// 6636608910639 (To High
+    /// 5841321518474 (To Low)
+    /// 6636608781232
+    public void Part2()
     {
-        for (int i = 0; i < files.Count-1; i++)
+        var files = ReadAndParseInput().ToList();
+
+        // Print(files);
+
+        for (int i = files.Max(f => f.Id); i >= 0; i--)
         {
-            if(files[i].EndIndex != files[i + 1].StartIndex - 1)
+            var fileToMove = files.First(x => x.Id == i);
+            var fileToMoveIndex = files.IndexOf(fileToMove);
+
+            var afterFileIndex = GetFirstFileIndexBeforeMinimumEmptySpace(files, fileToMove.Lenght, fileToMoveIndex);
+            if (afterFileIndex == -1)
             {
-                Console.WriteLine("Not valid");
+                // Console.WriteLine("No place found");
+                continue;
+            }
+            
+            var afterFile = files[afterFileIndex];
+            fileToMove.StartIndex = afterFile.EndIndex + 1;
+            files.Remove(fileToMove);
+            files.Insert(afterFileIndex + 1, fileToMove);
+            // Print(files);
+        }
+
+        long checksum = 0;
+
+        foreach (var file in files)
+        {
+            for (int i = file.StartIndex; i <= file.EndIndex; i++)
+            {
+                checksum += file.Id * i;
             }
         }
+        Console.WriteLine(checksum);
+    }
+
+    private int GetFirstFileIndexBeforeMinimumEmptySpace(List<DiskFile> files, int lenght, int maxIndex)
+    {
+        for (int i = 0; i <= maxIndex - 1; i++)
+        {
+            if (files[i].EndIndex < files[i + 1].StartIndex - lenght)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     private int GetLastFileIndexOfCompressed(List<DiskFile> files)
@@ -84,10 +121,6 @@ public class Day9
         }
 
         Console.WriteLine(output);
-    }
-
-    public void Part2()
-    {
     }
 
     class DiskFile
