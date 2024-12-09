@@ -1,4 +1,4 @@
 ﻿using AdventOfCode;
 
-new Day6().Part1();
-new Day6().Part2();
+// new Day8().Part1();
+new Day8().Part2();
