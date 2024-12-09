@@ -20,10 +20,10 @@ public class Day8
                 an.column < input.width)
             .Distinct()
             .ToList();
-        foreach (var valueTuple in antinodes)
-        {
-            Console.WriteLine(valueTuple);
-        }
+        // foreach (var valueTuple in antinodes)
+        // {
+        //     Console.WriteLine(valueTuple);
+        // }
         Console.WriteLine(antinodes.Count);
         
     }
@@ -36,10 +36,10 @@ public class Day8
             .SelectMany(f => f.GetAntiNodesWithHarmonics(input.height, input.width))
             .Distinct()
             .ToList();
-        foreach (var valueTuple in antinodes)
-        {
-            Console.WriteLine(valueTuple);
-        }
+        // foreach (var valueTuple in antinodes)
+        // {
+        //     Console.WriteLine(valueTuple);
+        // }
         Console.WriteLine(antinodes.Count);
     }
 

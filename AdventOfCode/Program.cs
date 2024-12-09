@@ -1,4 +1,9 @@
 ﻿using AdventOfCode;
 
-new Day7().Part1();
-new Day7().Part2();
+var day = new Day9();
+
+Console.WriteLine("Part 1:");
+day.Part1();
+Console.WriteLine("Part 2:");
+day.Part2();
+Console.Write("Done!");

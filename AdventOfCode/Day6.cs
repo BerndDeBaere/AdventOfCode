@@ -29,7 +29,6 @@ public class Day6
     public void Part2()
     {
         var input = ReadAndParseInput();
-        int count = 0;
         HashSet<(int row, int column)> blockages = new HashSet<(int row, int column)>();
         HashSet<(int row, int column)> visited = new HashSet<(int row, int column)>();
         bool isFree = false;
