@@ -1,11 +1,4 @@
-﻿using System.Data;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text.Unicode;
-using System.Threading.Tasks.Dataflow;
-using Microsoft.Win32.SafeHandles;
-
-namespace AdventOfCode;
+﻿namespace AdventOfCode;
 
 public class Day7
 {
@@ -15,75 +8,124 @@ public class Day7
         foreach (var calibration in ReadAndParseInput())
         {
             bool isPossible = false;
-            foreach (var operators in GetAllPossibleOperatorsCombinations(calibration.Values.Count - 1))
+            foreach (var operators in GetAllPossibleOperatorsCombinations(calibration.Values.Count - 1, ['+', '*']))
             {
-                if (!calibration.CheckOperators(operators)) continue;
-                isPossible = true;
-                Console.Write($"{calibration.Result} = {calibration.Values[0]}");
-                for (int i = 0; i < operators.Length; i++)
+                string calculation = calibration.CreateCalculationString(operators);
+                if (CheckIfCorrect(calibration.Result, calculation, ['+', '*']))
                 {
-                    Console.Write($"{operators[i]}{calibration.Values[i + 1]}");
+                    isPossible = true;
+                    break;
                 }
-                Console.WriteLine();
-                break;
             }
+
             if (isPossible)
             {
                 totalCount += calibration.Result;
             }
         }
+
+        Console.WriteLine(totalCount);
+    }
+    
+    public void Part2()
+    {
+        long totalCount = 0;
+        foreach (var calibration in ReadAndParseInput())
+        {
+            bool isPossible = false;
+            foreach (var operators in GetAllPossibleOperatorsCombinations(calibration.Values.Count - 1, ['+', '*', '|']))
+            {
+                string calculation = calibration.CreateCalculationString(operators);
+                if (CheckIfCorrect(calibration.Result, calculation, ['+', '*', '|']))
+                {
+                    isPossible = true;
+                    break;
+                }
+            }
+
+            if (isPossible)
+            {
+                totalCount += calibration.Result;
+            }
+        }
+
         Console.WriteLine(totalCount);
     }
 
-    public IEnumerable<char[]> GetAllPossibleOperatorsCombinations(int lenght)
+    public bool CheckIfCorrect(long result, string calculation, char[] operators)
     {
-        long totalValue = Convert.ToInt64(Math.Pow(2, lenght));
-        for (long i = 0; i < totalValue; i++)
-        {
-            var toBaseString = Convert.ToString(i, 2).PadLeft(lenght, '0');
-            for (int replace = 0; replace < 2; replace++)
-            {
-                toBaseString = toBaseString.Replace("0", "+").Replace("1", "*");
-            }
+        if (result.ToString() == calculation)
+            return true;
 
-            yield return toBaseString.ToCharArray();
+        int index = 0;
+        int operationIndex = calculation.IndexOfAny(operators, index);
+        if (operationIndex == -1) return false;
+
+        string numberString = calculation.Substring(index, operationIndex);
+        long value = long.Parse(numberString);
+        index = operationIndex;
+
+        while (operationIndex != -1)
+        {
+            char operation = calculation[operationIndex];
+            operationIndex = calculation.IndexOfAny(operators, operationIndex+1);
+            numberString = operationIndex == -1 ? calculation.Substring(index+1) : calculation.Substring(index+1, operationIndex-index-1);
+            index = operationIndex;
+            switch (operation)
+            {
+                case '+':
+                    value += long.Parse(numberString);
+                    break;
+                case '*':
+                    value *= long.Parse(numberString);
+                    break;
+                case '|':
+                    value = long.Parse(string.Concat(value.ToString(), numberString));
+                    break;
+            }
         }
+
+        return value == result;
     }
 
 
-    public void Part2()
+    public string NumberToBaseXString(long value, char[] baseChars)
     {
+        string result = string.Empty;
+        int targetBase = baseChars.Length;
+        do
+        {
+            result = baseChars[value % targetBase] + result;
+            value /= targetBase;
+        } while (value > 0);
+
+        return result;
+    }
+
+    public IEnumerable<char[]> GetAllPossibleOperatorsCombinations(int lenght, char[] operators)
+    {
+        var totalValue = Math.Pow(operators.Length, lenght);
+        for (var i = 0; i < totalValue; i++)
+        {
+            var toBaseString = NumberToBaseXString(i, operators).PadLeft(lenght, operators[0]);
+            yield return toBaseString.ToCharArray();
+        }
     }
 
 
     private class Calibration
     {
         public long Result { get; set; }
-        public List<long> Values { get; set; }
+        public List<long> Values { get; set; } = [];
 
-        public bool CheckOperators(char[] operators)
+        public string CreateCalculationString(char[] operators)
         {
-            if (operators.Length != Values.Count - 1)
-                throw new Exception("Operator count does not match value count");
-
-            long result = Values[0];
-            for (int i = 0; i < Values.Count - 1; i++)
+            string output = Values[0].ToString();
+            for (int i = 0; i < operators.Length; i++)
             {
-                result = Calculate(result, Values[i + 1], operators[i]);
+                output += $"{operators[i]}{Values[i + 1]}";
             }
-
-            return result == Result;
-        }
-
-
-        public long Calculate(long a, long b, char operation)
-        {
-            return operation switch
-            {
-                '+' => a + b,
-                '*' => a * b,
-                _ => throw new Exception("Unknown operation")
-            };
+            return output;
         }
     }
 
