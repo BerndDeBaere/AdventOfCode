@@ -38,8 +38,8 @@ public class Day11
         for (int i = 0; i < blinks; i++)
         {
             (row, extraStones) = Blink(row, blinks - i - 1, extraStones);
-            Console.WriteLine("{3}: {0} stones + {1} extra = {2} stones", row.Count, extraStones, Convert.ToUInt64(row.Count) + extraStones, i+1);
         }
+        Console.WriteLine("{0} stones", Convert.ToUInt64(row.Count) + extraStones);
     }
 
 
