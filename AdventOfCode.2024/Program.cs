@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using AdventOfCode;
+using AdventOfCode._2024;
 
 Stopwatch watch = new Stopwatch();
 var day = new Day11();

@@ -4,7 +4,7 @@ using System.Text.Unicode;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.Win32.SafeHandles;
 
-namespace AdventOfCode;
+namespace AdventOfCode._2024;
 
 public class Day8
 {

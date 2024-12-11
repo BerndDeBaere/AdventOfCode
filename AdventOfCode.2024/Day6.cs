@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks.Dataflow;
 
-namespace AdventOfCode;
+namespace AdventOfCode._2024;
 
 public class Day6
 {

@@ -1,7 +1,7 @@
 ﻿using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode;
+namespace AdventOfCode._2024;
 
 public class Day4
 {
