@@ -41,6 +41,13 @@
       <None Update="Input\Day11.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Input\Day12.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AdventOfCode.Helpers\AdventOfCode.Helpers.csproj" />
     </ItemGroup>
 
 </Project>
