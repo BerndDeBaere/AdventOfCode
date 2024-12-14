@@ -2,7 +2,7 @@
 using AdventOfCode._2024;
 
 Stopwatch watch = new Stopwatch();
-var day = new Day12();
+var day = new Day13();
 watch.Start();
 Console.WriteLine("Part 1:");
 day.Part1();
